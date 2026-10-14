@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Reading Room — Library Operations & SQL Database</title>
+  <!-- Google Fonts: Newsreader for editorial serif headings & Plus Jakarta Sans for UI -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-mark">
+          <span>LR</span>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">The Reading<br>Room</span>
+          <span class="brand-subtitle">LIBRARY OPERATIONS</span>
+        </div>
+      </div>
+
+      <div class="sidebar-section-title">DESK</div>
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-tab="overview" id="nav-overview">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          </svg>
+          <span class="nav-label">Overview</span>
+          <span class="active-dot"></span>
+        </button>
+
+        <button class="nav-item" data-tab="catalog" id="nav-catalog">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+          <span class="nav-label">Catalog</span>
+          <span class="badge" id="badge-catalog-count">6</span>
+        </button>
+
+        <button class="nav-item" data-tab="members" id="nav-members">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          <span class="nav-label">Members</span>
+          <span class="badge" id="badge-members-count">4</span>
+        </button>
+
+        <button class="nav-item" data-tab="circulation" id="nav-circulation">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="17 1 21 5 17 9"></polyline>
+            <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+            <polyline points="7 23 3 19 7 15"></polyline>
+            <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+          </svg>
+          <span class="nav-label">Circulation</span>
+        </button>
+
+        <button class="nav-item" data-tab="reservations" id="nav-reservations">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <span class="nav-label">Reservations</span>
+          <span class="badge alert-badge" id="badge-holds-count">2</span>
+        </button>
+
+        <button class="nav-item" data-tab="fines" id="nav-fines">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+            <line x1="12" y1="8" x2="12" y2="16"></line>
+            <line x1="8" y1="12" x2="16" y2="12"></line>
+          </svg>
+          <span class="nav-label">Fines & payments</span>
+        </button>
+
+        <button class="nav-item" data-tab="digital" id="nav-digital">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
+            <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>
+          </svg>
+          <span class="nav-label">Digital access</span>
+        </button>
+
+        <div class="sidebar-section-title" style="margin-top: 1.25rem;">DBMS REVIEW</div>
+
+        <button class="nav-item" data-tab="sql-console" id="nav-sql">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+            <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+            <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+          </svg>
+          <span class="nav-label">SQL Console</span>
+          <span class="badge db-badge">SQLite</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="status-banner">
+          <div class="status-icon">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+          </div>
+          <div class="status-details">
+            <span class="status-title">Desk is in good order</span>
+            <span class="status-sub">Records refresh as your team works. You are viewing the shared library ledger.</span>
+          </div>
+        </div>
+        <div class="footer-meta">
+          <span>STAFF CONSOLE</span>
+          <span>v 1.0</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN VIEWPORT -->
+    <main class="main-content">
+      <!-- TOP NAV BAR -->
+      <header class="top-nav">
+        <div class="breadcrumb">
+          <span class="crumb-campus">NORTH READING ROOM</span>
+          <span class="crumb-separator">/</span>
+          <span class="crumb-page" id="topbar-crumb">STAFF</span>
+        </div>
+        <div class="top-nav-actions">
+          <button class="btn-ghost" id="btn-quick-new-loan" title="Quick check out book">
+            + Check out
+          </button>
+          <div class="desk-profile">
+            <span class="desk-name">Collection desk</span>
+            <div class="desk-avatar">LR</div>
+          </div>
+        </div>
+      </header>
+
+      <!-- VIEW CONTAINER -->
+      <div class="content-scrollable">
+        
+        <!-- 1. OVERVIEW VIEW (Matches User Screenshot) -->
+        <section class="tab-pane active" id="pane-overview">
+          <div class="greeting-section">
+            <div class="date-header" id="current-date-header">MONDAY, OCTOBER 12 &middot; DAILY DESK</div>
+            <h1 class="greeting-heading">Good morning, librarian.</h1>
+            <p class="greeting-sub">A clear view of what is happening across your library today.</p>
+          </div>
+
+          <!-- 4 STAT METRICS CARDS -->
+          <div class="stats-grid">
+            <div class="stat-card" data-jump="catalog">
+              <div class="stat-top">
+                <span class="stat-title">Titles in catalog</span>
+                <div class="stat-icon-wrapper">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="stat-value" id="kpi-titles">6</div>
+              <div class="stat-footer" id="kpi-copies-sub">12 copies across editions</div>
+            </div>
+
+            <div class="stat-card" data-jump="circulation">
+              <div class="stat-top">
+                <span class="stat-title">Available to borrow</span>
+                <div class="stat-icon-wrapper">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div class="stat-value" id="kpi-available">10</div>
+              <div class="stat-footer" id="kpi-loans-sub">2 active loans</div>
+            </div>
+
+            <div class="stat-card" data-jump="members">
+              <div class="stat-top">
+                <span class="stat-title">Active members</span>
+                <div class="stat-icon-wrapper">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                </div>
+              </div>
+              <div class="stat-value" id="kpi-members">4</div>
+              <div class="stat-footer" id="kpi-holds-sub">2 holds waiting</div>
+            </div>
+
+            <div class="stat-card" data-jump="fines">
+              <div class="stat-top">
+                <span class="stat-title">Outstanding fines</span>
+                <div class="stat-icon-wrapper stat-icon-amber">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                </div>
+              </div>
+              <div class="stat-value" id="kpi-fines">₹30.00</div>
+              <div class="stat-footer" id="kpi-overdue-sub">1 overdue loans</div>
+            </div>
+          </div>
+
+          <!-- SPLIT DESK SECTION -->
+          <div class="desk-split-grid">
+            <!-- LEFT: TODAY AT THE DESK / LIVE LEDGER -->
+            <div class="card ledger-card">
+              <div class="card-header">
+                <div class="header-titles">
+                  <h2 class="card-title">Today at the desk</h2>
+                  <p class="card-subtitle">Recent activity across physical and digital services</p>
+                </div>
+                <div class="header-action">
+                  <span class="live-pill">LIVE LEDGER</span>
+                </div>
+              </div>
+
+              <div class="ledger-feed" id="ledger-feed-list">
+                <!-- Dynamically filled with events matching screenshot -->
+              </div>
+            </div>
+
+            <!-- RIGHT: FROM SHELF TO SCREEN FEATURE CARD -->
+            <div class="forest-card">
+              <div class="forest-tag">FROM SHELF TO SCREEN</div>
+              <h3 class="forest-heading">One collection.<br>Every way to read.</h3>
+              <p class="forest-description">
+                Physical holdings and digital access share one dependable desk. Keep the records current and the doors open.
+              </p>
+
+              <div class="forest-divider"></div>
+
+              <div class="forest-stats-row">
+                <div class="forest-stat">
+                  <span class="forest-stat-label">DIGITAL VISITS TODAY</span>
+                  <span class="forest-stat-value" id="forest-digital-count">2</span>
+                </div>
+                <div class="forest-stat">
+                  <span class="forest-stat-label">PHYSICAL COPIES</span>
+                  <span class="forest-stat-value" id="forest-copies-ratio">10 of 12</span>
+                </div>
+              </div>
+
+              <div class="forest-actions">
+                <button class="forest-btn primary" id="btn-forest-loan">+ New Checkout</button>
+                <button class="forest-btn secondary" id="btn-forest-digital">Read Digital</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. CATALOG VIEW -->
+        <section class="tab-pane" id="pane-catalog">
+          <div class="pane-header">
+            <div>
+              <h2 class="pane-title">Library Book Catalog</h2>
+              <p class="pane-sub">Managed via SQLite <code>books</code> table with availability tracking</p>
+            </div>
+            <div class="pane-actions">
+              <button class="btn-primary" id="btn-open-add-book">+ Add New Title</button>
+            </div>
+          </div>
+
+          <div class="filter-bar">
+            <div class="search-input-wrap">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input type="text" id="catalog-search" placeholder="Search by title, author, or ISBN...">
+            </div>
+            <select id="catalog-genre-filter">
+              <option value="">All Genres</option>
+              <option value="Self-Help">Self-Help / Psychology</option>
+              <option value="History">History / Anthropology</option>
+              <option value="Dystopian">Dystopian Classic</option>
+              <option value="Finance">Finance & Behaviour</option>
+              <option value="Productivity">Productivity</option>
+              <option value="Fiction">Fiction</option>
+            </select>
+          </div>
+
+          <div class="table-container">
+            <table class="data-table" id="books-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Title & Author</th>
+                  <th>ISBN</th>
+                  <th>Genre</th>
+                  <th>Year</th>
+                  <th>Holdings</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="books-tbody">
+                <!-- Books injected here -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 3. MEMBERS VIEW -->
+        <section class="tab-pane" id="pane-members">
+          <div class="pane-header">
+            <div>
+              <h2 class="pane-title">Registered Library Members</h2>
+              <p class="pane-sub">Member directory and borrowing quotas from SQLite <code>members</code> table</p>
+            </div>
+            <div class="pane-actions">
+              <button class="btn-primary" id="btn-open-add-member">+ Register Member</button>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Card #</th>
+                  <th>Full Name</th>
+                  <th>Contact Email</th>
+                  <th>Phone</th>
+                  <th>Active Loans</th>
+                  <th>Outstanding Fine</th>
+                  <th>Member Since</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="members-tbody">
+                <!-- Members injected here -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 4. CIRCULATION VIEW -->
+        <section class="tab-pane" id="pane-circulation">
+          <div class="pane-header">
+            <div>
+              <h2 class="pane-title">Circulation & Loan Ledger</h2>
+              <p class="pane-sub">Active loans, return receipts, and automated fine enforcement</p>
+            </div>
+            <div class="pane-actions">
+              <button class="btn-primary" id="btn-open-issue-loan">+ Issue Book Loan</button>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Loan ID</th>
+                  <th>Book Title</th>
+                  <th>Borrower</th>
+                  <th>Loan Date</th>
+                  <th>Due Date</th>
+                  <th>Return Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="circulation-tbody">
+                <!-- Loans injected here -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 5. RESERVATIONS VIEW -->
+        <section class="tab-pane" id="pane-reservations">
+          <div class="pane-header">
+            <div>
+              <h2 class="pane-title">Book Reservations & Holds</h2>
+              <p class="pane-sub">Queue for checked out and popular titles from <code>reservations</code> table</p>
+            </div>
+            <div class="pane-actions">
+              <button class="btn-primary" id="btn-open-add-reservation">+ Place New Hold</button>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Hold ID</th>
+                  <th>Reserved Title</th>
+                  <th>Member Name</th>
+                  <th>Reservation Date</th>
+                  <th>Notes</th>
+                  <th>Hold Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="reservations-tbody">
+                <!-- Reservations injected here -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 6. FINES VIEW -->
+        <section class="tab-pane" id="pane-fines">
+          <div class="pane-header">
+            <div>
+              <h2 class="pane-title">Fines & Payment Processing</h2>
+              <p class="pane-sub">Audit trail of overdue penalties calculated in INR (₹)</p>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Fine ID</th>
+                  <th>Member</th>
+                  <th>Associated Book</th>
+                  <th>Reason</th>
+                  <th>Amount</th>
+                  <th>Issued Date</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="fines-tbody">
+                <!-- Fines injected here -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 7. DIGITAL ACCESS VIEW -->
+        <section class="tab-pane" id="pane-digital">
+          <div class="pane-header">
+            <div>
+              <h2 class="pane-title">Digital Library Access Sessions</h2>
+              <p class="pane-sub">Logs of e-book reads and digital circulation across devices</p>
+            </div>
+            <div class="pane-actions">
+              <button class="btn-primary" id="btn-open-digital-read">+ Launch Reader Session</button>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Session ID</th>
+                  <th>Book Title</th>
+                  <th>Member</th>
+                  <th>Access Timestamp</th>
+                  <th>Device / Client</th>
+                  <th>Duration</th>
+                </tr>
+              </thead>
+              <tbody id="digital-tbody">
+                <!-- Digital logs injected here -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 8. SQL CONSOLE / DBMS REVIEW -->
+        <section class="tab-pane" id="pane-sql-console">
+          <div class="pane-header">
+            <div>
+              <h2 class="pane-title">Interactive SQLite Database Console</h2>
+              <p class="pane-sub">Live SQL executor directly interfacing with <code>library.db</code> for DBMS Review presentation</p>
+            </div>
+            <div class="pane-actions">
+              <button class="btn-ghost" id="btn-reset-db-state">Reset to Default Data</button>
+            </div>
+          </div>
+
+          <div class="sql-review-grid">
+            <div class="sql-editor-card">
+              <div class="editor-topbar">
+                <span>SQL Query Editor</span>
+                <div class="preset-queries">
+                  <span>Quick Samples:</span>
+                  <button class="btn-chip" data-sql="SELECT c.loan_id, b.title, m.full_name, c.status, c.due_date FROM circulation c JOIN books b ON c.book_id = b.book_id JOIN members m ON c.member_id = m.member_id;">Active Loans JOIN</button>
+                  <button class="btn-chip" data-sql="SELECT m.full_name, f.amount, f.reason, f.status FROM fines f JOIN members m ON f.member_id = m.member_id WHERE f.status = 'Outstanding';">Fines JOIN</button>
+                  <button class="btn-chip" data-sql="SELECT b.title, COUNT(c.loan_id) as total_borrows FROM books b LEFT JOIN circulation c ON b.book_id = c.book_id GROUP BY b.book_id ORDER BY total_borrows DESC;">Book Popularity GROUP BY</button>
+                  <button class="btn-chip" data-sql="SELECT * FROM activity_ledger ORDER BY ledger_id DESC LIMIT 10;">Recent Activity Ledger</button>
+                </div>
+              </div>
+              <textarea id="sql-input" rows="5">SELECT c.loan_id, b.title, m.full_name, c.status, c.loan_date, c.due_date 
+FROM circulation c 
+JOIN books b ON c.book_id = b.book_id 
+JOIN members m ON c.member_id = m.member_id;</textarea>
+              <div class="sql-execute-bar">
+                <button class="btn-execute" id="btn-execute-sql">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                  </svg>
+                  Execute Query
+                </button>
+                <span class="sql-execution-meta" id="sql-meta-text">Ready to run query against library.db</span>
+              </div>
+            </div>
+
+            <div class="sql-schema-sidebar">
+              <div class="schema-title">Database Schema (7 Tables)</div>
+              <div class="schema-list" id="schema-tables-list">
+                <div class="schema-item"><code>books</code> <small>(id, title, author, isbn, copies)</small></div>
+                <div class="schema-item"><code>members</code> <small>(id, name, membership_no, email)</small></div>
+                <div class="schema-item"><code>circulation</code> <small>(id, book_id, member_id, due_date)</small></div>
+                <div class="schema-item"><code>reservations</code> <small>(id, book_id, member_id, status)</small></div>
+                <div class="schema-item"><code>fines</code> <small>(id, loan_id, member_id, amount)</small></div>
+                <div class="schema-item"><code>digital_access</code> <small>(id, book_id, member_id, timestamp)</small></div>
+                <div class="schema-item"><code>activity_ledger</code> <small>(id, member_name, action, time)</small></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sql-result-card">
+            <div class="result-header">
+              <span>Query Results</span>
+              <span id="result-row-count">0 rows</span>
+            </div>
+            <div class="table-container" id="sql-results-container">
+              <div class="empty-state">Run an SQL statement above to see live relation outputs.</div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- MODAL: ADD BOOK -->
+  <div class="modal-backdrop" id="modal-add-book">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Catalog New Book</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      <form id="form-add-book">
+        <div class="form-group">
+          <label>Book Title *</label>
+          <input type="text" name="title" required placeholder="e.g. Sapiens: A Graphic History">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Author *</label>
+            <input type="text" name="author" required placeholder="e.g. Yuval Noah Harari">
+          </div>
+          <div class="form-group">
+            <label>ISBN *</label>
+            <input type="text" name="isbn" required placeholder="e.g. 978-0063007789">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Genre / Section</label>
+            <input type="text" name="genre" placeholder="e.g. History / Graphic">
+          </div>
+          <div class="form-group">
+            <label>Publication Year</label>
+            <input type="number" name="publication_year" value="2023">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Physical Copies Quantity</label>
+          <input type="number" name="total_copies" value="2" min="1" max="50">
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-ghost modal-cancel">Cancel</button>
+          <button type="submit" class="btn-primary">Save to Catalog</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: REGISTER MEMBER -->
+  <div class="modal-backdrop" id="modal-add-member">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Register New Member</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      <form id="form-add-member">
+        <div class="form-group">
+          <label>Full Legal Name *</label>
+          <input type="text" name="full_name" required placeholder="e.g. Ananya Sen">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Email Address *</label>
+            <input type="email" name="email" required placeholder="e.g. ananya@example.com">
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="text" name="phone" placeholder="+91 98765 00000">
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-ghost modal-cancel">Cancel</button>
+          <button type="submit" class="btn-primary">Register Member</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: ISSUE LOAN -->
+  <div class="modal-backdrop" id="modal-issue-loan">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Issue Book Loan (Checkout)</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      <form id="form-issue-loan">
+        <div class="form-group">
+          <label>Select Available Book *</label>
+          <select name="book_id" id="loan-book-select" required>
+            <!-- Injected dynamically -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Select Member *</label>
+          <select name="member_id" id="loan-member-select" required>
+            <!-- Injected dynamically -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Loan Duration (Days)</label>
+          <input type="number" name="days" value="14" min="1" max="60">
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-ghost modal-cancel">Cancel</button>
+          <button type="submit" class="btn-primary">Issue Loan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: PLACE RESERVATION -->
+  <div class="modal-backdrop" id="modal-add-reservation">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Place Book Hold / Reservation</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      <form id="form-add-reservation">
+        <div class="form-group">
+          <label>Book to Reserve *</label>
+          <select name="book_id" id="reservation-book-select" required>
+            <!-- Injected dynamically -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Member *</label>
+          <select name="member_id" id="reservation-member-select" required>
+            <!-- Injected dynamically -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Notes / Instructions</label>
+          <input type="text" name="notes" placeholder="e.g. Notify via SMS upon availability">
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-ghost modal-cancel">Cancel</button>
+          <button type="submit" class="btn-primary">Confirm Hold</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: DIGITAL READ SIMULATOR -->
+  <div class="modal-backdrop" id="modal-digital-access">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Launch Digital Access Session</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      <form id="form-digital-access">
+        <div class="form-group">
+          <label>Book Title *</label>
+          <select name="book_id" id="digital-book-select" required>
+            <!-- Injected dynamically -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Member *</label>
+          <select name="member_id" id="digital-member-select" required>
+            <!-- Injected dynamically -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Reader Device</label>
+          <select name="device_type">
+            <option value="Web Reader">Web Reader</option>
+            <option value="Tablet App">Tablet App</option>
+            <option value="E-Reader (Kindle/Kobo)">E-Reader (Kindle/Kobo)</option>
+            <option value="Mobile App">Mobile App</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-ghost modal-cancel">Cancel</button>
+          <button type="submit" class="btn-primary">Open Reader</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
